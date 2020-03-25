@@ -1,113 +1,218 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    MaterialApp(
+      title: 'Custom Named Routes Example',
+      initialRoute: HomePage.route,
+      onGenerateRoute: RouteConfiguration.onGenerateRoute,
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
-    );
+class Path {
+  const Path(this.pattern, this.builder);
+
+  /// A RegEx string for route matching.
+  final String pattern;
+
+  /// The builder for the associated pattern route. The first argument is the
+  /// [BuildContext] and the second argument is any RegEx matches if such are
+  /// included inside of the pattern.
+  final Widget Function(BuildContext, Map<String, String>) builder;
+}
+
+class RouteConfiguration {
+  /// List of [Path] to for route matching. When a named route is pushed with
+  /// [Navigator.pushNamed], the route name is matched with the [Path.pattern]
+  /// in the list below. As soon as there is a match, the associated builder
+  /// will be returned. This means that the paths higher up in the list will
+  /// take priority.
+  static List<Path> paths = [
+    Path(
+      r'^' + ArticlePage.baseRoute + r'/(?<slug>[\w-]+)$',
+      (context, matches) => Article.getArticlePage(matches['slug']),
+    ),
+    Path(
+      r'^' + OverviewPage.route,
+      (context, matches) => OverviewPage(),
+    ),
+    Path(
+      r'^' + HomePage.route,
+      (context, matches) => HomePage(),
+    ),
+  ];
+
+  /// The route generator callback used when the app is navigated to a named
+  /// route. Set it on the [MaterialApp.onGenerateRoute] or
+  /// [WidgetsApp.onGenerateRoute] to make use of the [paths] for route
+  /// matching.
+  static Route<dynamic> onGenerateRoute(RouteSettings settings) {
+    for (Path path in paths) {
+      final regExpPattern = RegExp(path.pattern);
+      if (regExpPattern.hasMatch(settings.name)) {
+        final match = regExpPattern.firstMatch(settings.name);
+        Map<String, String> groupNameToMatch = {};
+        for (String groupName in match.groupNames) {
+          groupNameToMatch[groupName] = match.namedGroup(groupName);
+        }
+        return MaterialPageRoute<void>(
+          builder: (context) => path.builder(context, groupNameToMatch),
+          settings: settings,
+        );
+      }
+    }
+
+    // If no match was found, we let [WidgetsApp.onUnknownRoute] handle it.
+    return null;
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+// In a real application this would probably be some kind of database interface.
+const List<Article> articles = [
+  Article(
+    title: 'A very interesting article',
+    slug: 'a-very-interesting-article',
+  ),
+  Article(
+    title: 'Newsworthy news',
+    slug: 'newsworthy-news',
+  ),
+  Article(
+    title: 'RegEx is cool',
+    slug: 'regex-is-cool',
+  ),
+];
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
+class Article {
+  const Article({this.title, this.slug});
 
   final String title;
+  final String slug;
 
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
+  static Widget getArticlePage(String slug) {
+    for (Article article in articles) {
+      if (article.slug == slug) {
+        return ArticlePage(article: article);
+      }
+    }
+    return UnknownArticle();
+  }
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class ArticlePage extends StatelessWidget {
+  const ArticlePage({Key key, this.article}) : super(key: key);
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+  static String baseRoute = '/article';
+  static String Function(String slug) routeFromSlug =
+      (String slug) => baseRoute + '/$slug';
+
+  final Article article;
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text(article.title),
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+          children: [
+            Text(article.title),
+            RaisedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Go back!'),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+class UnknownArticle extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Unknown article'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Unknown article'),
+            RaisedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Go back!'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class OverviewPage extends StatelessWidget {
+  static String route = '/overview';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Overview Page'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            for (Article article in articles)
+              RaisedButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed(
+                    ArticlePage.routeFromSlug(article.slug),
+                  );
+                },
+                child: Text(article.title),
+              ),
+            RaisedButton(
+              onPressed: () {
+                // Navigate back to the home screen by popping the current route
+                // off the stack.
+                Navigator.pop(context);
+              },
+              child: Text('Go back!'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  static String route = '/';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Home Page'),
+      ),
+      body: Center(
+        child: RaisedButton(
+          child: Text('Overview page'),
+          onPressed: () {
+            // Navigate to the overview page using a named route.
+            Navigator.pushNamed(context, OverviewPage.route);
+          },
+        ),
+      ),
     );
   }
 }
