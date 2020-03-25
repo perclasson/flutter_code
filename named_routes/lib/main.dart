@@ -27,7 +27,7 @@ class HomePage extends StatelessWidget {
           child: Text('Overview page'),
           onPressed: () {
             // Navigate to the overview page using a named route.
-            Navigator.pushNamed(context, OverviewPage.route);
+            Navigator.of(context).pushNamed(OverviewPage.route);
           },
         ),
       ),
