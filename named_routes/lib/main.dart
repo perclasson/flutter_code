@@ -14,7 +14,7 @@ void main() {
 }
 
 class HomePage extends StatelessWidget {
-  static String route = '/';
+  static const String route = '/';
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class HomePage extends StatelessWidget {
 }
 
 class OverviewPage extends StatelessWidget {
-  static String route = '/overview';
+  static const String route = '/overview';
 
   @override
   Widget build(BuildContext context) {
