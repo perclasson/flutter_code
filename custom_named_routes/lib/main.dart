@@ -17,9 +17,9 @@ class Path {
   final String pattern;
 
   /// The builder for the associated pattern route. The first argument is the
-  /// [BuildContext] and the second argument is any RegEx matches if such are
+  /// [BuildContext] and the second argument is a RegEx match if it is
   /// included inside of the pattern.
-  final Widget Function(BuildContext, Map<String, String>) builder;
+  final Widget Function(BuildContext, String) builder;
 }
 
 class RouteConfiguration {
@@ -30,16 +30,16 @@ class RouteConfiguration {
   /// take priority.
   static List<Path> paths = [
     Path(
-      r'^' + ArticlePage.baseRoute + r'/(?<slug>[\w-]+)$',
-      (context, matches) => Article.getArticlePage(matches['slug']),
+      r'^' + ArticlePage.baseRoute + r'/([\w-]+)$',
+      (context, match) => Article.getArticlePage(match),
     ),
     Path(
       r'^' + OverviewPage.route,
-      (context, matches) => OverviewPage(),
+      (context, match) => OverviewPage(),
     ),
     Path(
       r'^' + HomePage.route,
-      (context, matches) => HomePage(),
+      (context, match) => HomePage(),
     ),
   ];
 
@@ -51,13 +51,10 @@ class RouteConfiguration {
     for (Path path in paths) {
       final regExpPattern = RegExp(path.pattern);
       if (regExpPattern.hasMatch(settings.name)) {
-        final match = regExpPattern.firstMatch(settings.name);
-        Map<String, String> groupNameToMatch = {};
-        for (String groupName in match.groupNames) {
-          groupNameToMatch[groupName] = match.namedGroup(groupName);
-        }
+        final firstMatch = regExpPattern.firstMatch(settings.name);
+        final match = (firstMatch.groupCount == 1) ? firstMatch.group(1) : null;
         return MaterialPageRoute<void>(
-          builder: (context) => path.builder(context, groupNameToMatch),
+          builder: (context) => path.builder(context, match),
           settings: settings,
         );
       }
@@ -103,7 +100,7 @@ class Article {
 class ArticlePage extends StatelessWidget {
   const ArticlePage({Key key, this.article}) : super(key: key);
 
-  static String baseRoute = '/article';
+  static const String baseRoute = '/article';
   static String Function(String slug) routeFromSlug =
       (String slug) => baseRoute + '/$slug';
 
@@ -159,7 +156,7 @@ class UnknownArticle extends StatelessWidget {
 }
 
 class OverviewPage extends StatelessWidget {
-  static String route = '/overview';
+  static const String route = '/overview';
 
   @override
   Widget build(BuildContext context) {
@@ -196,7 +193,7 @@ class OverviewPage extends StatelessWidget {
 }
 
 class HomePage extends StatelessWidget {
-  static String route = '/';
+  static const String route = '/';
 
   @override
   Widget build(BuildContext context) {
