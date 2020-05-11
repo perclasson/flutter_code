@@ -1,0 +1,4 @@
+name: Example of images moving around after loading.
+mode: flutter
+files:
+  - name: main.dart

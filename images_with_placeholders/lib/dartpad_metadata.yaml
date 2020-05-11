@@ -1,0 +1,4 @@
+name: Example of image placeholders.
+mode: flutter
+files:
+  - name: main.dart

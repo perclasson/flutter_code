@@ -1,0 +1,4 @@
+name: Example of pre-cached images.
+mode: flutter
+files:
+  - name: main.dart
