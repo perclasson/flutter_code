@@ -92,6 +92,5 @@ class ShowGreeter extends StatelessWidget {
         return Text(greeter.greet('World'));
       },
     );
-    ;
   }
 }
