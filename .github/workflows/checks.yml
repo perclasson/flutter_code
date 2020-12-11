@@ -1,0 +1,54 @@
+name: Code checks.
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+jobs:
+  test:
+    name: Test ${{ matrix.project}} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-18.04, windows-2019, macos-10.15]
+        project: [custom_named_routes, deferred_loading, images_jumping_around, images_with_placeholders, named_routes, no_transition, precached_images]
+    steps:
+    # Checkout Flutter and add it to the path.
+    - name: Checkout Flutter repository with stable channel.
+      uses: actions/checkout@v2
+      with:
+        repository: 'flutter/flutter'
+        ref: 'stable'
+        path: 'flutter'
+        fetch-depth: 0
+    - name: Add Flutter to the PATH for Unix
+      if: startsWith(matrix.os, 'macOS') || startsWith(matrix.os, 'ubuntu')
+      run: echo "$GITHUB_WORKSPACE/flutter/bin" >> $GITHUB_PATH
+    - name: Add Flutter to the PATH for Windows
+      if: startsWith(matrix.os, 'windows')
+      run: echo "${env:GITHUB_WORKSPACE}\flutter\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+    - name: Run Flutter doctor.
+      run: flutter doctor -v
+
+    # Checkout your repository under `code`, to avoid conflicts with `flutter`.
+    - name: Checkout repository.
+      uses: actions/checkout@v2
+      with:
+        path: 'code'
+
+    - name: Get packages for the Flutter project.
+      run: flutter pub get
+      working-directory: code/${{ matrix.project }}
+
+    - name: Check code formatting.
+      run: flutter format --set-exit-if-changed --dry-run .
+      working-directory: code/${{ matrix.project }}
+
+    - name: Analyze the Dart code.
+      run: flutter analyze
+      working-directory: code/${{ matrix.project }}
+
+    - name: Run Flutter tests.
+      run: flutter test
+      working-directory: code/${{ matrix.project }}
