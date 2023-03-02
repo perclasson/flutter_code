@@ -102,8 +102,8 @@ class ImageCaption extends StatelessWidget {
 }
 
 class ImageWidgetPlaceholder extends StatelessWidget {
-  const ImageWidgetPlaceholder({Key key, this.image, this.placeholder})
-      : super(key: key);
+  const ImageWidgetPlaceholder(
+      {required this.image, required this.placeholder});
 
   final ImageProvider image;
   final Widget placeholder;
@@ -112,9 +112,9 @@ class ImageWidgetPlaceholder extends StatelessWidget {
   Widget build(BuildContext context) {
     return Image(
       image: image,
-      frameBuilder: (BuildContext context, Widget child, int frame,
+      frameBuilder: (BuildContext context, Widget child, int? frame,
           bool wasSynchronouslyLoaded) {
-        if (wasSynchronouslyLoaded) {
+        if (wasSynchronouslyLoaded == true) {
           return child;
         } else {
           return AnimatedSwitcher(
@@ -128,7 +128,8 @@ class ImageWidgetPlaceholder extends StatelessWidget {
 }
 
 class CatImage {
-  const CatImage({this.width, this.height, this.caption});
+  const CatImage(
+      {required this.width, required this.height, required this.caption});
   final double width;
   final double height;
   final String caption;
@@ -137,10 +138,10 @@ class CatImage {
 }
 
 const List<CatImage> images = [
-  CatImage(width: 150, height: 150, caption: 'Watch out'),
-  CatImage(width: 150, height: 160, caption: 'Hmm'),
-  CatImage(width: 160, height: 150, caption: 'Whats up'),
-  CatImage(width: 140, height: 150, caption: 'Miaoo'),
-  CatImage(width: 130, height: 150, caption: 'Hey'),
-  CatImage(width: 155, height: 150, caption: 'Hello'),
+  CatImage(width: 150.0, height: 150.0, caption: 'Watch out'),
+  CatImage(width: 150.0, height: 160.0, caption: 'Hmm'),
+  CatImage(width: 160.0, height: 150.0, caption: 'Whats up'),
+  CatImage(width: 140.0, height: 150.0, caption: 'Miaoo'),
+  CatImage(width: 130.0, height: 150.0, caption: 'Hey'),
+  CatImage(width: 155.0, height: 150.0, caption: 'Hello'),
 ];
