@@ -138,10 +138,10 @@ class CatImage {
 }
 
 const List<CatImage> images = [
-  CatImage(width: 150, height: 150, caption: 'Watch out'),
-  CatImage(width: 150, height: 160, caption: 'Hmm'),
-  CatImage(width: 160, height: 150, caption: 'Whats up'),
-  CatImage(width: 140, height: 150, caption: 'Miaoo'),
-  CatImage(width: 130, height: 150, caption: 'Hey'),
-  CatImage(width: 155, height: 150, caption: 'Hello'),
+  CatImage(width: 150.0, height: 150.0, caption: 'Watch out'),
+  CatImage(width: 150.0, height: 160.0, caption: 'Hmm'),
+  CatImage(width: 160.0, height: 150.0, caption: 'Whats up'),
+  CatImage(width: 140.0, height: 150.0, caption: 'Miaoo'),
+  CatImage(width: 130.0, height: 150.0, caption: 'Hey'),
+  CatImage(width: 155.0, height: 150.0, caption: 'Hello'),
 ];
