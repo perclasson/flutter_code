@@ -56,8 +56,7 @@ class _DemoState extends State<Demo> {
               },
             ),
             SizedBox(width: 20),
-            ElevatedButtoncustom_named_routes/lib/main.dart
-              (
+            ElevatedButton(
               child: Text('Swedish'),
               onPressed: () {
                 setState(() {
