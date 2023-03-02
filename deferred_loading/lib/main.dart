@@ -47,7 +47,7 @@ class _DemoState extends State<Demo> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            RaisedButton(
+            ElevatedButton(
               child: Text('English'),
               onPressed: () {
                 setState(() {
@@ -56,7 +56,7 @@ class _DemoState extends State<Demo> {
               },
             ),
             SizedBox(width: 20),
-            RaisedButton(
+            ElevatedButton(
               child: Text('Swedish'),
               onPressed: () {
                 setState(() {
