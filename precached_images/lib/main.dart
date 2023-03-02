@@ -102,8 +102,8 @@ class ImageCaption extends StatelessWidget {
 }
 
 class ImageWidgetPlaceholder extends StatelessWidget {
-  const ImageWidgetPlaceholder({Key key, this.image, this.placeholder})
-      : super(key: key);
+  const ImageWidgetPlaceholder(
+      {required this.image, required this.placeholder});
 
   final ImageProvider image;
   final Widget placeholder;
@@ -112,9 +112,9 @@ class ImageWidgetPlaceholder extends StatelessWidget {
   Widget build(BuildContext context) {
     return Image(
       image: image,
-      frameBuilder: (BuildContext context, Widget child, int frame,
+      frameBuilder: (BuildContext context, Widget child, int? frame,
           bool wasSynchronouslyLoaded) {
-        if (wasSynchronouslyLoaded) {
+        if (wasSynchronouslyLoaded == true) {
           return child;
         } else {
           return AnimatedSwitcher(
@@ -128,7 +128,8 @@ class ImageWidgetPlaceholder extends StatelessWidget {
 }
 
 class CatImage {
-  const CatImage({this.width, this.height, this.caption});
+  const CatImage(
+      {required this.width, required this.height, required this.caption});
   final double width;
   final double height;
   final String caption;
