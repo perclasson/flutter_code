@@ -117,7 +117,7 @@ class ArticlePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(article.title),
-            RaisedButton(
+            ElevatedButton(
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -142,7 +142,7 @@ class UnknownArticle extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text('Unknown article'),
-            RaisedButton(
+            ElevatedButton(
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -169,7 +169,7 @@ class OverviewPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             for (Article article in articles)
-              RaisedButton(
+              ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pushNamed(
                     ArticlePage.routeFromSlug(article.slug),
@@ -177,7 +177,7 @@ class OverviewPage extends StatelessWidget {
                 },
                 child: Text(article.title),
               ),
-            RaisedButton(
+            ElevatedButton(
               onPressed: () {
                 // Navigate back to the home screen by popping the current route
                 // off the stack.
@@ -202,7 +202,7 @@ class HomePage extends StatelessWidget {
         title: Text('Home Page'),
       ),
       body: Center(
-        child: RaisedButton(
+        child: ElevatedButton(
           child: Text('Overview page'),
           onPressed: () {
             // Navigate to the overview page using a named route.
