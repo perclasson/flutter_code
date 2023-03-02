@@ -23,7 +23,7 @@ class HomePage extends StatelessWidget {
         title: Text('Home Page'),
       ),
       body: Center(
-        child: RaisedButton(
+        child: ElevatedButton(
           child: Text('Overview page'),
           onPressed: () {
             // Navigate to the overview page using a named route.
@@ -45,7 +45,7 @@ class OverviewPage extends StatelessWidget {
         title: Text('Overview Page'),
       ),
       body: Center(
-        child: RaisedButton(
+        child: ElevatedButton(
           onPressed: () {
             // Navigate back to the home screen by popping the current route
             // off the stack.

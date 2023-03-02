@@ -42,7 +42,7 @@ jobs:
       working-directory: code/${{ matrix.project }}
 
     - name: Check code formatting.
-      run: flutter format --set-exit-if-changed --dry-run .
+      run: dart format -o none --set-exit-if-changed .
       working-directory: code/${{ matrix.project }}
 
     - name: Analyze the Dart code.

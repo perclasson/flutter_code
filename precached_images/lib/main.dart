@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -45,12 +44,14 @@ class _WelcomeState extends State<Welcome> {
       body: Container(
         alignment: Alignment.topCenter,
         margin: EdgeInsets.only(top: 50),
-        child: FlatButton(
+        child: TextButton(
           child: Text('Welcome!'),
           onPressed: () {
             Navigator.of(context).pushNamed('/demo');
           },
-          color: Colors.white,
+          style: TextButton.styleFrom(
+            foregroundColor: Colors.white,
+          ),
         ),
       ),
     );
